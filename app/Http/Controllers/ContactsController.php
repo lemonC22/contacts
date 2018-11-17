@@ -3,9 +3,22 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests;
+use App\Contact;
+use App\User;
+use DB;
 
 class ContactsController extends Controller
 {
+    
+    
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
+
+
     /**
      * Display a listing of the resource.
      *
@@ -13,7 +26,17 @@ class ContactsController extends Controller
      */
     public function index()
     {
-        //
+        
+        //$contacts = Contact::all();
+        //$contacts= Contact::where('contactname','Nomel')->get();
+        //$contacts = DBCT * FROM nomelcontacts');
+        //$contacts = Contact::orderBy('contactname','asc')->take()->get();
+        //$contacts = Contact::orderBy('contactname','asc')->paginate(1);
+        $user_id = auth()->user()->id;
+        $user = User::find($user_id);
+        $contacts = Contact::orderBy('contactname','asc')->get();
+        return view('contacts.index')->with('contacts',$user->contacts);
+
     }
 
     /**
@@ -23,7 +46,7 @@ class ContactsController extends Controller
      */
     public function create()
     {
-        //
+        return view('contacts.create');
     }
 
     /**
@@ -34,7 +57,26 @@ class ContactsController extends Controller
      */
     public function store(Request $request)
     {
+        //return view('contacts.create');
         //
+
+        $this->validate($request, [
+
+            'contactname' => 'required',
+            'contactnumber' => 'required',
+            
+        ]);
+
+
+        $contact = new Contact;
+        $contact->contactname = $request->input('contactname');
+        $contact->contactnumber = $request->input('contactnumber');
+        $contact->email = $request->input('email');
+        $contact->address = $request->input('address');
+        $contact->user_id = auth()->user()->id;
+        $contact->save();
+
+        return redirect ('/contacts')->with('success','New Contact Added');
     }
 
     /**
@@ -45,7 +87,9 @@ class ContactsController extends Controller
      */
     public function show($id)
     {
-        //
+        $contact = Contact::find($id);
+        return view('contacts.show')->with('contact',$contact);
+        
     }
 
     /**
@@ -56,7 +100,9 @@ class ContactsController extends Controller
      */
     public function edit($id)
     {
-        //
+        $contact = Contact::find($id);
+        return view('contacts.edit')->with('contact',$contact);
+        
     }
 
     /**
@@ -68,7 +114,14 @@ class ContactsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $contact = Contact::find($id);
+        $contact->contactname = $request->input('contactname');
+        $contact->contactnumber = $request->input('contactnumber');
+        $contact->email = $request->input('email');
+        $contact->address = $request->input('address');
+        $contact->save();
+
+        return redirect ('/contacts')->with('success','Contact Updated');
     }
 
     /**
@@ -80,5 +133,9 @@ class ContactsController extends Controller
     public function destroy($id)
     {
         //
+        $contact = Contact::find($id);
+        $contact->delete();
+        return redirect ('/contacts')->with('success','Contact Removed');
+
     }
 }

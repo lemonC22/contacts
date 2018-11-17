@@ -16,9 +16,14 @@ Route::get('/', function () {
 
 */
 
-
 Route::get('/', 'PagesController@index');
 
-Route::get('/about', 'PagesController@about');
+//Route::get('/', 'ContactsController@index');
 
-Route::get('/services', 'PagesController@services');
+//Route::get('/contacts/create', 'ContactsController@create');
+
+Route::resource('contacts','ContactsController');
+
+//Route::post('/contacts/create', 'ContactsController@store');
+Auth::routes();
+
