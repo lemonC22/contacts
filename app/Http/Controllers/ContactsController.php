@@ -55,6 +55,14 @@ class ContactsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
+    public function search(Request $request)
+    {
+        $search = $request->get('search');
+        $contacts = Contact::where('contactname','like','%'.$search.'%')->get();
+        return view ('contacts.index',['contacts'=>$contacts]);
+    }
+
     public function store(Request $request)
     {
         //return view('contacts.create');
@@ -138,4 +146,6 @@ class ContactsController extends Controller
         return redirect ('/contacts')->with('success','Contact Removed');
 
     }
+
+   
 }

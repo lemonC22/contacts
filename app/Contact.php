@@ -14,4 +14,13 @@ class Contact extends Model
     public function user(){
         return $this->belongsTo('App\User');
     }
+
+    public function scopeSearch($query, $s){
+
+        return $query->where('contactname','like','%'.$s.'%');
+           // ->orWhere('contactnumber','like','%'.$s.'%')
+           // ->orWhere('email','like','%'.$s.'%')
+          //  ->orWhere('address','like','%'.$s.'%');
+            
+    }
 }

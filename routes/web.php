@@ -27,3 +27,5 @@ Route::resource('contacts','ContactsController');
 //Route::post('/contacts/create', 'ContactsController@store');
 Auth::routes();
 
+Route::get('search','ContactsController@search');
+
